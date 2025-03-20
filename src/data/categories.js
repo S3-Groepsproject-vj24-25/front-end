@@ -2,7 +2,7 @@ const categories = [
     {
       id: 1,
       name: "All",
-      image: "/images/chicken-salad",
+      image: "/images/chicken-salad.jpg",
     },
     {
       id: 2,
