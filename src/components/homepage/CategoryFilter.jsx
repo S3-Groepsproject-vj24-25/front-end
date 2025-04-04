@@ -74,7 +74,7 @@ const CategoryFilter = ({ categories, selectedCategory, setSelectedCategory }) =
   const needsScrolling = categories.length > 4
 
   return (
-    <div className={`relative w-full mb-6 ${!shouldShowFilter ? "hidden" : ""}`}>
+    <div className={`relative w-full mb-2 ${!shouldShowFilter ? "hidden" : ""}`}>
       {needsScrolling && showLeftChevron && (
         <button
           onClick={scrollLeft}
@@ -101,15 +101,15 @@ const CategoryFilter = ({ categories, selectedCategory, setSelectedCategory }) =
           >
             <div
               className={`
-                w-14 h-14 rounded-full flex items-center justify-center
+                w-14 h-14 rounded-lg flex items-center justify-center
                 transition-all duration-200 ease-in-out
-                ${selectedCategory === category.name ? "ring-2 ring-red-600 scale-110" : "hover:scale-105"}
+                ${selectedCategory === category.name ? "ring-2 ring-accent" : "hover:scale-105"}
               `}
             >
               <img
                 src={category.image || "/placeholder.svg"}
                 alt={category.name}
-                className="w-14 h-14 rounded-full object-cover"
+                className="w-14 h-14 rounded-lg object-cover"
               />
             </div>
             <span className="text-xs font-medium text-center">{category.name}</span>
@@ -117,7 +117,7 @@ const CategoryFilter = ({ categories, selectedCategory, setSelectedCategory }) =
         ))}
       </div>
 
-      {/* Right Chevron */}
+      
       {needsScrolling && showRightChevron && (
         <button
           onClick={scrollRight}
