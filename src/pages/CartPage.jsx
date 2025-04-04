@@ -32,12 +32,35 @@ const CartPage = () => {
       clearCart()
       setIsCheckingOut(false)
       navigate("/")
+      console.log(order)
     }, 1500)
   }
 
   const goBack = () => {
     navigate("/")
   }
+
+  const order = {
+    orderId: `ORD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    tableNumber: "15",
+    items: cartItems.map((item) => ({
+      id: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      unitPrice: item.price,
+      modifications: item.modifications,
+      instructions: item.instructions || "",
+      itemTotal: item.totalPrice,
+    })),
+    summary: {
+      subtotal: Number.parseFloat(subtotal),
+      additions: Number.parseFloat(additions),
+      total: Number.parseFloat(total),
+    },
+
+  }
+
 
   return (
     <div className="min-h-screen w-full flex flex-col">
