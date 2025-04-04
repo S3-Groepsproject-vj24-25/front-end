@@ -1,16 +1,8 @@
-
-import './App.css'
-
-function App() {
+import Homepage from "./pages/Homepage"
+export default function App() {
 
   return (
-    <>
-      <div className='bg-primary'>
-        <h1 className='text-secondary'>Hello</h1>
-        <h2 className='text-accent'>World</h2>
-      </div>
-    </>
+    <Homepage/>
   )
 }
 
-export default App
