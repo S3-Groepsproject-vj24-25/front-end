@@ -33,7 +33,7 @@ const CartPage = () => {
       setIsCheckingOut(false)
       navigate("/")
       console.log(order)
-    }, 1500)
+    }, 500)
   }
 
   const goBack = () => {

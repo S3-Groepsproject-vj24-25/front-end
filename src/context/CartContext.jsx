@@ -3,10 +3,8 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 
-// Create context
 const CartContext = createContext()
 
-// Custom hook to use the cart context
 export const useCart = () => {
   const context = useContext(CartContext)
   if (!context) {
