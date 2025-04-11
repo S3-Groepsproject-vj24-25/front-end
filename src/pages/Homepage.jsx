@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { SearchBar } from "../components/homepage/SearchBar"
 import CategoryFilter from "../components/homepage/CategoryFilter"
 import MenuItems from "../components/homepage/MenuItems"
+import CartSummary from "../components/cart/CartSummary"
 import menuItems from "../data/menuItems"
 import categories from "../data/categories"
 
@@ -23,8 +24,6 @@ export default function Homepage() {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesCategory && matchesSearch
   })
-
-
 
   return (
     <div className="min-h-screen w-full flex flex-col">
@@ -55,9 +54,11 @@ export default function Homepage() {
               <div className="text-gray-500">No menu items found. Try a different search or category.</div>
             </div>
           )}
-          
         </main>
-   
+
+        <footer className="w-full p-4 bg-white">
+          <CartSummary />
+        </footer>
       </div>
     </div>
   )
