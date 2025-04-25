@@ -3,6 +3,10 @@ import { useState } from "react"
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react"
 import { useCart } from "../context/CartContext"
 import { useNavigate } from "react-router-dom"
+// In your React frontend
+//fetch('https://localhost:7260/orders')
+  //.then(response => response.json())
+  //.then(data => console.log(data));
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart()
@@ -25,16 +29,34 @@ const CartPage = () => {
 
   const total = getTotalPrice()
 
-  const handleCheckout = () => {
-    setIsCheckingOut(true)
-    setTimeout(() => {
-      alert("Order placed successfully!")
-      clearCart()
-      setIsCheckingOut(false)
-      navigate("/")
-      console.log(order)
-    }, 500)
-  }
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    console.log("Order being sent:", JSON.stringify(order, null, 2));
+    try {
+      const response = await fetch("https://localhost:7260/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
+  
+      if (response.ok) {
+        alert("Order placed successfully!");
+        clearCart();
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        alert("Failed to place order: " + JSON.stringify(errorData));
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("Something went wrong during checkout.");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+  
 
   const goBack = () => {
     navigate("/")
@@ -52,6 +74,7 @@ const CartPage = () => {
       modifications: item.modifications,
       instructions: item.instructions || "",
       itemTotal: item.totalPrice,
+      type: item.type || "Food",
     })),
     summary: {
       subtotal: Number.parseFloat(subtotal),
