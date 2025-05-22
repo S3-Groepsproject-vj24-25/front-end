@@ -25,41 +25,82 @@ const CartPage = () => {
 
   const total = getTotalPrice()
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     setIsCheckingOut(true)
-    setTimeout(() => {
-      alert("Order placed successfully!")
+
+    try {
+      
+      const formattedOrder = {
+        id: 0, 
+        tableNumber: "15", //TODO: Use QR scan ID for table number
+        items: cartItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          modifications: item.modifications.length > 0 ? item.modifications.map((mod) => mod.name).join(", ") : "",
+          instructions: item.instructions || "",
+          totalPrice: item.totalPrice,
+          type: item.category === "Drinks" ? "Drink" : "Food",
+        })),
+        isCompleted: false,
+        status: "Pending",
+        timestamp: new Date().toISOString(),
+      }
+
+      console.log("Submitting order:", formattedOrder)
+
+      const response = await fetch("http://localhost:5238/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedOrder),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log("Order submitted successfully:", result)
+
+      alert(`Order #${result.id || "New"} placed successfully!`)
+
       clearCart()
-      setIsCheckingOut(false)
       navigate("/")
-      console.log(order)
-    }, 500)
+    } catch (error) {
+      console.error("Error submitting order:", error)
+      alert("There was an error processing your order. Please try again.")
+    } finally {
+      setIsCheckingOut(false)
+    }
   }
 
   const goBack = () => {
     navigate("/")
   }
 
-  const order = {
-    orderId: `ORD-${Date.now()}`,
-    timestamp: new Date().toISOString(),
-    tableNumber: "15",
-    items: cartItems.map((item) => ({
-      id: item.id,
-      name: item.name,
-      quantity: item.quantity,
-      unitPrice: item.price,
-      modifications: item.modifications,
-      instructions: item.instructions || "",
-      itemTotal: item.totalPrice,
-    })),
-    summary: {
-      subtotal: Number.parseFloat(subtotal),
-      additions: Number.parseFloat(additions),
-      total: Number.parseFloat(total),
-    },
+  // const order = {
+  //   orderId: `ORD-${Date.now()}`,
+  //   timestamp: new Date().toISOString(),
+  //   tableNumber: "15",
+  //   items: cartItems.map((item) => ({
+  //     id: item.id,
+  //     name: item.name,
+  //     quantity: item.quantity,
+  //     unitPrice: item.price,
+  //     modifications: item.modifications,
+  //     instructions: item.instructions || "",
+  //     itemTotal: item.totalPrice,
+  //   })),
+  //   summary: {
+  //     subtotal: Number.parseFloat(subtotal),
+  //     additions: Number.parseFloat(additions),
+  //     total: Number.parseFloat(total),
+  //   },
 
-  }
+  // }
 
 
   return (
