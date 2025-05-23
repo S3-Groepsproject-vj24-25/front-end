@@ -1,6 +1,6 @@
 describe('Homepage', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:5173/')
+      cy.visit('http://localhost:3000/')
     })
   
     it('displays the header with restaurant name', () => {

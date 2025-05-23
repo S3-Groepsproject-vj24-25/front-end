@@ -1,6 +1,6 @@
 describe('Category Filtering', () => {
     beforeEach(() => {
-      cy.visit('/')
+      cy.visit('http://localhost:3000/')
     })
   
     it('shows all items when "All" category is selected', () => {

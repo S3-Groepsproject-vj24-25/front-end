@@ -1,6 +1,6 @@
 describe('Search Functionality', () => {
     beforeEach(() => {
-      cy.visit('/')
+      cy.visit('http://localhost:3000/')
     })
   
     it('filters menu items when searching', () => {
