@@ -7,9 +7,11 @@ const OrderStatus = {
   COMPLETED: "Completed",
 }
 
+const API_BASE_URL = "https://localhost:7260/api/orders"
+
 const fetchOrders = async () => {
   try {
-    const response = await fetch("http://localhost:5238/kitchen")
+    const response = await fetch(`${API_BASE_URL}/kitchen`)
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
@@ -22,7 +24,7 @@ const fetchOrders = async () => {
 
 const fetchOrdersByStatus = async (status) => {
   try {
-    const response = await fetch(`http://localhost:5238/status?status=${status}`)
+    const response = await fetch(`${API_BASE_URL}/status?status=${status}`)
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
@@ -36,7 +38,7 @@ const fetchOrdersByStatus = async (status) => {
 
 const startOrderPreparation = async (orderId) => {
   try {
-    const response = await fetch(`http://localhost:5238/${orderId}/start`, {
+    const response = await fetch(`${API_BASE_URL}/${orderId}/start`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +58,7 @@ const startOrderPreparation = async (orderId) => {
 
 const completeOrder = async (orderId) => {
   try {
-    const response = await fetch(`http://localhost:5238/${orderId}/complete`, {
+    const response = await fetch(`${API_BASE_URL}/${orderId}/complete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,7 +78,7 @@ const completeOrder = async (orderId) => {
 
 const updateOrder = async (order) => {
   try {
-    const response = await fetch(`http://localhost:5238/${order.id}`, {
+    const response = await fetch(`${API_BASE_URL}/${order.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -168,7 +170,7 @@ const KitchenPortal = () => {
 
         if (selectedOrder && selectedOrder.id === order.id) {
           try {
-            const updatedOrder = await fetch(`http://localhost:5238/${order.id}`).then((res) => {
+            const updatedOrder = await fetch(`${API_BASE_URL}/${order.id}`).then((res) => {
               if (!res.ok) throw new Error("Failed to fetch updated order")
               return res.json()
             })
@@ -518,4 +520,3 @@ const KitchenPortal = () => {
 }
 
 export default KitchenPortal
-

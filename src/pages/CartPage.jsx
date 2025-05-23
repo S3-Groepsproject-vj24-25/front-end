@@ -48,15 +48,15 @@ const CartPage = () => {
         timestamp: new Date().toISOString(),
       }
 
-      console.log("Submitting order:", formattedOrder)
+console.log("Submitting order:", formattedOrder)
 
-      const response = await fetch("http://localhost:5238/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formattedOrder),
-      })
+const response = await fetch("https://localhost:7260/api/orders/add", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(formattedOrder),
+})
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
