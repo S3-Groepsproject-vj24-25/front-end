@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react"
 import { useCart } from "../context/CartContext"
@@ -157,15 +156,20 @@ const CartPage = () => {
                           <button
                             onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
                             className="bg-primary text-white rounded-l-full w-6 h-6 flex items-center justify-center"
+                            data-testid="decrease-quantity"
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <div className="bg-primary bg-opacity-10 h-6 w-8 flex items-center justify-center text-primary text-sm font-medium">
+                          <div 
+                            className="bg-primary bg-opacity-10 h-6 w-8 flex items-center justify-center text-primary text-sm font-medium"
+                            data-testid="quantity-display"
+                          >
                             {item.quantity}
                           </div>
                           <button
                             onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
                             className="bg-primary text-white rounded-r-full w-6 h-6 flex items-center justify-center"
+                            data-testid="increase-quantity"
                           >
                             <Plus className="h-3 w-3" />
                           </button>
@@ -207,4 +211,3 @@ const CartPage = () => {
 }
 
 export default CartPage
-
