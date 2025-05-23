@@ -1,6 +1,6 @@
 describe('Shopping Cart', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
     cy.window().then((win) => {
       win.localStorage.removeItem('cart')
     })

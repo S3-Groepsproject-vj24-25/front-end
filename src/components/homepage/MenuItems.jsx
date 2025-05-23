@@ -19,7 +19,7 @@ const MenuItems = ({ items }) => {
     <>
       <div className="w-full flex flex-wrap -mx-2">
         {items.map((item) => (
-          <div key={item.id} className="w-1/2 px-2 mb-4 md:w-1/3 lg:w-1/4">
+          <div key={item.id} className="w-1/2 px-2 mb-4 md:w-1/3 lg:w-1/4" data-testid="menu-item">
             <div className="h-full rounded-lg overflow-hidden shadow-sm border flex flex-col">
               <div className="relative w-full cursor-pointer" onClick={() => openProductModal(item)}>
                 <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-full h-32 object-cover" />
