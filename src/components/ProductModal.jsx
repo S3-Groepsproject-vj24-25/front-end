@@ -80,15 +80,22 @@ const ProductModal = ({ item, onClose, onAddToCart }) => {
                 onClick={decreaseQuantity}
                 className="bg-primary text-white rounded-l-full w-8 h-8 flex items-center justify-center"
                 disabled={quantity <= 1}
+                data-testid="decrease-quantity"
+                aria-label="Decrease quantity"
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <div className="bg-primary bg-opacity-10 h-8 px-4 flex items-center justify-center text-primary font-medium">
+              <div 
+                className="bg-primary bg-opacity-10 h-8 px-4 flex items-center justify-center text-primary font-medium"
+                data-testid="quantity-display"
+              >
                 {quantity}
               </div>
               <button
                 onClick={increaseQuantity}
                 className="bg-primary text-white rounded-r-full w-8 h-8 flex items-center justify-center"
+                data-testid="increase-quantity"
+                aria-label="Increase quantity"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -120,12 +127,19 @@ const ProductModal = ({ item, onClose, onAddToCart }) => {
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Extra instructions..."
               className="w-full border rounded-md p-2 h-24 resize-none"
+              data-testid="instructions-textarea"
             />
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t">
-            <div className="text-primary font-medium text-lg">${calculateTotalPrice()}</div>
-            <button onClick={handleAddToCart} className="bg-primary text-white py-2 px-6 rounded-full font-medium">
+            <div className="text-primary font-medium text-lg" data-testid="total-price">
+              ${calculateTotalPrice()}
+            </div>
+            <button 
+              onClick={handleAddToCart} 
+              className="bg-primary text-white py-2 px-6 rounded-full font-medium"
+              data-testid="add-to-order-button"
+            >
               Add To Order
             </button>
           </div>
@@ -136,4 +150,3 @@ const ProductModal = ({ item, onClose, onAddToCart }) => {
 }
 
 export default ProductModal
-
