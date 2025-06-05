@@ -2,10 +2,6 @@ import { useState } from "react"
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react"
 import { useCart } from "../context/CartContext"
 import { useNavigate } from "react-router-dom"
-// In your React frontend
-//fetch('https://localhost:7260/orders')
-  //.then(response => response.json())
-  //.then(data => console.log(data));
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart()
@@ -53,7 +49,7 @@ const CartPage = () => {
       timestamp: new Date().toISOString(),
     }
   
-    console.log("🟡 Sending order to backend:", formattedOrder)
+    console.log("Sending order to backend:", formattedOrder)
   
     try {
       const response = await fetch("https://localhost:7260/add", {
@@ -64,30 +60,30 @@ const CartPage = () => {
         body: JSON.stringify(formattedOrder),
       })
   
-      console.log("🟣 Raw response object:", response)
+      console.log("Raw response object:", response)
   
       const contentType = response.headers.get("content-type")
       let result = null
   
       if (contentType && contentType.includes("application/json")) {
         result = await response.json()
-        console.log("🟢 Parsed JSON response:", result)
+        console.log("Parsed JSON response:", result)
       } else {
         const text = await response.text()
-        console.log("🟠 Response text (non-JSON):", text)
+        console.log("Response text (non-JSON):", text)
       }
   
       if (!response.ok) {
-        console.error("❌ Server returned an error status:", response.status)
+        console.error("Server returned an error status:", response.status)
         alert("Error: " + response.status)
         return
       }
   
-      alert(`✅ Order #${result?.id || "New"} placed successfully!`)
+      alert(`Order #${result?.id || "New"} placed successfully!`)
       clearCart()
       navigate("/")
     } catch (error) {
-      console.error("🔥 Error caught in catch block:", error)
+      console.error("Error caught in catch block:", error)
       alert("Something went wrong while submitting the order.")
     } finally {
       setIsCheckingOut(false)
