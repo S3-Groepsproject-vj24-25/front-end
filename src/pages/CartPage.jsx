@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react"
 import { useCart } from "../context/CartContext"
@@ -30,33 +29,56 @@ const CartPage = () => {
   const total = getTotalPrice()
 
   const handleCheckout = async () => {
-    setIsCheckingOut(true);
-    console.log("Order being sent:", JSON.stringify(order, null, 2));
+    setIsCheckingOut(true)
+
     try {
-      const response = await fetch("https://localhost:7260/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      });
-  
-      if (response.ok) {
-        alert("Order placed successfully!");
-        clearCart();
-        navigate("/");
-      } else {
-        const errorData = await response.json();
-        alert("Failed to place order: " + JSON.stringify(errorData));
+      
+      const formattedOrder = {
+        id: 0, 
+        tableNumber: "15", //TODO: Use QR scan ID for table number
+        items: cartItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          modifications: item.modifications.length > 0 ? item.modifications.map((mod) => mod.name).join(", ") : "",
+          instructions: item.instructions || "",
+          totalPrice: item.totalPrice,
+          type: item.category === "Drinks" ? "Drink" : "Food",
+        })),
+        isCompleted: false,
+        status: "Pending",
+        timestamp: new Date().toISOString(),
       }
+
+console.log("Submitting order:", formattedOrder)
+
+const response = await fetch("https://localhost:7260/api/orders/add", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(formattedOrder),
+})
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log("Order submitted successfully:", result)
+
+      alert(`Order #${result.id || "New"} placed successfully!`)
+
+      clearCart()
+      navigate("/")
     } catch (error) {
-      console.error("Checkout error:", error);
-      alert("Something went wrong during checkout.");
+      console.error("Error submitting order:", error)
+      alert("There was an error processing your order. Please try again.")
     } finally {
-      setIsCheckingOut(false);
+      setIsCheckingOut(false)
     }
-  };
-  
+  }
 
   const goBack = () => {
     navigate("/")
@@ -74,7 +96,6 @@ const CartPage = () => {
       modifications: item.modifications,
       instructions: item.instructions || "",
       itemTotal: item.totalPrice,
-      type: item.type || "Food",
     })),
     summary: {
       subtotal: Number.parseFloat(subtotal),
@@ -82,7 +103,7 @@ const CartPage = () => {
       total: Number.parseFloat(total),
     },
 
-  }
+  // }
 
 
   return (
@@ -139,15 +160,20 @@ const CartPage = () => {
                           <button
                             onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
                             className="bg-primary text-white rounded-l-full w-6 h-6 flex items-center justify-center"
+                            data-testid="decrease-quantity"
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <div className="bg-primary bg-opacity-10 h-6 w-8 flex items-center justify-center text-primary text-sm font-medium">
+                          <div 
+                            className="bg-primary bg-opacity-10 h-6 w-8 flex items-center justify-center text-primary text-sm font-medium"
+                            data-testid="quantity-display"
+                          >
                             {item.quantity}
                           </div>
                           <button
                             onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
                             className="bg-primary text-white rounded-r-full w-6 h-6 flex items-center justify-center"
+                            data-testid="increase-quantity"
                           >
                             <Plus className="h-3 w-3" />
                           </button>
@@ -189,4 +215,3 @@ const CartPage = () => {
 }
 
 export default CartPage
-
