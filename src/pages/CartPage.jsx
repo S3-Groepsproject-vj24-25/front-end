@@ -52,13 +52,13 @@ const CartPage = () => {
     console.log("Sending order to backend:", formattedOrder)
   
     try {
-      const response = await fetch("https://localhost:7260/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formattedOrder),
-      })
+      const response = await fetch("https://localhost:7260/api/orders/add", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(formattedOrder),
+})
   
       console.log("Raw response object:", response)
   
