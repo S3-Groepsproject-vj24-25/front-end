@@ -1,6 +1,6 @@
 describe('Search Functionality', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
   })
 
   it('filters menu items when searching', () => {
@@ -9,7 +9,7 @@ describe('Search Functionality', () => {
     cy.get('[data-testid="menu-item"]').then($items => {
       const initialCount = $items.length
       
-      // Take the first item for search purpose
+      // Find first item on the menu
       cy.get('[data-testid="menu-item"]').first().find('h3').invoke('text').then(itemName => {
         const searchTerm = itemName.split(' ')[0] // First item
         

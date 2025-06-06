@@ -26,80 +26,74 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true)
-
-    try {
-      
-      const formattedOrder = {
-        id: 0, 
-        tableNumber: "15", //TODO: Use QR scan ID for table number
-        items: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          modifications: item.modifications.length > 0 ? item.modifications.map((mod) => mod.name).join(", ") : "",
-          instructions: item.instructions || "",
-          totalPrice: item.totalPrice,
-          type: item.category === "Drinks" ? "Drink" : "Food",
+  
+    const formattedOrder = {
+      orderId: "8",
+      tableID: "1",
+      items: cartItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        modifications: item.modifications.map((mod) => ({
+          id: mod.id,
+          name: mod.name,
+          price: mod.price,
         })),
-        isCompleted: false,
-        status: "Pending",
-        timestamp: new Date().toISOString(),
-      }
-
-console.log("Submitting order:", formattedOrder)
-
-const response = await fetch("https://localhost:7260/api/orders/add", {
+        instructions: item.instructions || "",
+        totalPrice: item.totalPrice,
+        type: item.category === "Drinks" ? "Drink" : "Food",
+      })),
+      isCompleted: false,
+      status: "Pending",
+      timestamp: new Date().toISOString(),
+    }
+  
+    console.log("Sending order to backend:", formattedOrder)
+  
+    try {
+      const response = await fetch("https://localhost:7260/api/orders/add", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
   },
   body: JSON.stringify(formattedOrder),
 })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+  
+      console.log("Raw response object:", response)
+  
+      const contentType = response.headers.get("content-type")
+      let result = null
+  
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json()
+        console.log("Parsed JSON response:", result)
+      } else {
+        const text = await response.text()
+        console.log("Response text (non-JSON):", text)
       }
-
-      const result = await response.json()
-      console.log("Order submitted successfully:", result)
-
-      alert(`Order #${result.id || "New"} placed successfully!`)
-
+  
+      if (!response.ok) {
+        console.error("Server returned an error status:", response.status)
+        alert("Error: " + response.status)
+        return
+      }
+  
+      alert(`Order #${result?.id || "New"} placed successfully!`)
       clearCart()
       navigate("/")
     } catch (error) {
-      console.error("Error submitting order:", error)
-      alert("There was an error processing your order. Please try again.")
+      console.error("Error caught in catch block:", error)
+      alert("Something went wrong while submitting the order.")
     } finally {
       setIsCheckingOut(false)
     }
   }
+  
 
   const goBack = () => {
     navigate("/")
   }
-
-  // const order = {
-  //   orderId: `ORD-${Date.now()}`,
-  //   timestamp: new Date().toISOString(),
-  //   tableNumber: "15",
-  //   items: cartItems.map((item) => ({
-  //     id: item.id,
-  //     name: item.name,
-  //     quantity: item.quantity,
-  //     unitPrice: item.price,
-  //     modifications: item.modifications,
-  //     instructions: item.instructions || "",
-  //     itemTotal: item.totalPrice,
-  //   })),
-  //   summary: {
-  //     subtotal: Number.parseFloat(subtotal),
-  //     additions: Number.parseFloat(additions),
-  //     total: Number.parseFloat(total),
-  //   },
-
-  // }
 
 
   return (
