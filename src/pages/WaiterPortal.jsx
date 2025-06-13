@@ -69,7 +69,6 @@ const WaiterPortal = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
-      {/* Mobile Header */}
       <div className="md:hidden bg-amber-500 text-white p-4 flex justify-between items-center">
         <button onClick={toggleSidebar} className="p-1">
           {showSidebar ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
@@ -84,7 +83,6 @@ const WaiterPortal = () => {
         </div>
       </div>
 
-      {/* Help Requests Sidebar */}
       <div
         className={`${
           showSidebar ? "block" : "hidden"
@@ -105,7 +103,6 @@ const WaiterPortal = () => {
           </div>
         </div>
 
-        {/* Connection Status */}
         {!isConnected && (
           <div className="p-4 bg-red-50 border-b border-red-200">
             <div className="text-red-800 text-sm text-center">
@@ -115,7 +112,6 @@ const WaiterPortal = () => {
           </div>
         )}
 
-        {/* Help Requests List */}
         <div className="divide-y">
           {sortedRequests.length === 0 ? (
             <div className="p-6 text-center text-gray-500">
@@ -159,7 +155,6 @@ const WaiterPortal = () => {
         </div>
       </div>
 
-      {/* Request Details */}
       <div
         className={`${
           !showSidebar || !isMobile ? "block" : "hidden"
@@ -167,7 +162,6 @@ const WaiterPortal = () => {
       >
         {selectedRequest ? (
           <div>
-            {/* Mobile back button */}
             {isMobile && (
               <button
                 onClick={() => setShowSidebar(true)}
@@ -178,7 +172,6 @@ const WaiterPortal = () => {
             )}
 
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {/* Header */}
               <div className="px-6 py-4 border-b bg-amber-50">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-bold">Table {selectedRequest.tableNumber}</h2>
@@ -189,7 +182,6 @@ const WaiterPortal = () => {
                 </div>
               </div>
 
-              {/* Request Details */}
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
@@ -209,7 +201,6 @@ const WaiterPortal = () => {
                   </div>
                 </div>
 
-                {/* Action Button */}
                 <div className="flex justify-end">
                   <button
                     onClick={() => handleResolveRequest(selectedRequest.id)}

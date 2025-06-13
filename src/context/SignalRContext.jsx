@@ -20,17 +20,14 @@ export const SignalRProvider = ({ children }) => {
   const [helpRequests, setHelpRequests] = useState([])
 
   useEffect(() => {
-    // Create SignalR connection
     const newConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5238/helpHub") // Adjust URL to match your backend
+      .withUrl("http://localhost:5238/helpHub") 
       .withAutomaticReconnect()
       .build()
 
-    // Set up event handlers
     newConnection.on("HelpRequestReceived", (helpRequest) => {
       console.log("Help request received:", helpRequest)
       setHelpRequests((prev) => {
-        // Check if request already exists to avoid duplicates
         const exists = prev.some((req) => req.id === helpRequest.id)
         if (exists) {
           return prev.map((req) => (req.id === helpRequest.id ? helpRequest : req))
@@ -49,7 +46,6 @@ export const SignalRProvider = ({ children }) => {
       setHelpRequests(requests)
     })
 
-    // Start the connection
     const startConnection = async () => {
       try {
         await newConnection.start()
@@ -57,7 +53,6 @@ export const SignalRProvider = ({ children }) => {
         setIsConnected(true)
         setConnection(newConnection)
 
-        // Request current help requests when connected
         await newConnection.invoke("GetActiveHelpRequests")
       } catch (error) {
         console.error("SignalR Connection Error:", error)
@@ -67,7 +62,6 @@ export const SignalRProvider = ({ children }) => {
 
     startConnection()
 
-    // Handle connection state changes
     newConnection.onreconnecting(() => {
       console.log("SignalR Reconnecting...")
       setIsConnected(false)
@@ -83,7 +77,6 @@ export const SignalRProvider = ({ children }) => {
       setIsConnected(false)
     })
 
-    // Cleanup on unmount
     return () => {
       if (newConnection) {
         newConnection.stop()
@@ -91,7 +84,6 @@ export const SignalRProvider = ({ children }) => {
     }
   }, [])
 
-  // Send help request
   const sendHelpRequest = async (tableNumber, message = "Customer needs assistance") => {
     if (connection && isConnected) {
       try {
@@ -105,7 +97,6 @@ export const SignalRProvider = ({ children }) => {
     return { success: false, error: "Not connected to server" }
   }
 
-  // Resolve help request
   const resolveHelpRequest = async (requestId) => {
     if (connection && isConnected) {
       try {
