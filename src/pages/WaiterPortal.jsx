@@ -18,8 +18,6 @@ const WaiterPortal = () => {
         setShowSidebar(true)
       }
     }
-
-    
     checkIfMobile()
     window.addEventListener("resize", checkIfMobile)
     return () => window.removeEventListener("resize", checkIfMobile)
