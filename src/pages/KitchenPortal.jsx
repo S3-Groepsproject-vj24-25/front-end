@@ -7,7 +7,7 @@ const OrderStatus = {
   COMPLETED: "Completed",
 }
 
-const API_BASE_URL = "https://localhost:7260/api/orders"
+const API_BASE_URL = "https://api-access20250612100213-dahnfbc4a4cnfwgd.westeurope-01.azurewebsites.net/api/orders"
 
 const fetchOrders = async () => {
   try {
