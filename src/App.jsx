@@ -1,9 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import { CartProvider } from "./context/CartContext"
 import { TableProvider } from "./context/TableContext"
+import { SignalRProvider } from "./context/SignalRContext"
 import Homepage from "./pages/Homepage"
 import CartPage from "./pages/CartPage"
 import KitchenPortal from "./pages/KitchenPortal"
+import AdminDashboard from "./pages/AdminDashboard"
+import WaiterPortal from "./pages/WaiterPortal"
 
 function App() {
   return (
@@ -24,3 +27,4 @@ function App() {
 }
 
 export default App
+

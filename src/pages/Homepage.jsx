@@ -7,6 +7,7 @@ import MenuItems from "../components/homepage/MenuItems"
 import CartSummary from "../components/cart/CartSummary"
 import menuItems from "../data/menuItems"
 import categories from "../data/categories"
+import HelpButton from "../components/HelpButton"
 
 export default function Homepage() {
   const { tableId: urlTableId } = useParams()
@@ -86,7 +87,8 @@ export default function Homepage() {
           )}
         </main>
 
-        <footer className="w-full p-4 bg-white">
+        <footer className="w-full p-4 bg-white space-y-3">
+          <HelpButton tableNumber="15"/>
           <CartSummary />
         </footer>
       </div>
