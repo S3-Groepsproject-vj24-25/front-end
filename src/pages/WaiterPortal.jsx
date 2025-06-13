@@ -19,6 +19,7 @@ const WaiterPortal = () => {
       }
     }
 
+    
     checkIfMobile()
     window.addEventListener("resize", checkIfMobile)
     return () => window.removeEventListener("resize", checkIfMobile)
