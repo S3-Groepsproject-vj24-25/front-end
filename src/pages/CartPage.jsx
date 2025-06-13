@@ -1,11 +1,12 @@
-
 import { useState } from "react"
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react"
 import { useCart } from "../context/CartContext"
+import { useTable } from "../context/TableContext"
 import { useNavigate } from "react-router-dom"
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart()
+  const { tableId, hasTableId } = useTable()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const navigate = useNavigate()
 
@@ -27,51 +28,69 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true)
-
-    try {
-      
-      const formattedOrder = {
-        id: 0, 
-        tableNumber: "15", //TODO: Use QR scan ID for table number
-        items: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          modifications: item.modifications.length > 0 ? item.modifications.map((mod) => mod.name).join(", ") : "",
-          instructions: item.instructions || "",
-          totalPrice: item.totalPrice,
-          type: item.category === "Drinks" ? "Drink" : "Food",
+  
+    const formattedOrder = {
+      orderId: Math.random().toString(36).substr(2, 9), 
+      tableID: tableId || "0", 
+      items: cartItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        modifications: item.modifications.map((mod) => ({
+          id: mod.id,
+          name: mod.name,
+          price: mod.price,
         })),
-        isCompleted: false,
-        status: "Pending",
-        timestamp: new Date().toISOString(),
-      }
-
-      console.log("Submitting order:", formattedOrder)
-
-      const response = await fetch("http://localhost:5238/add", {
+        instructions: item.instructions || "",
+        totalPrice: item.totalPrice,
+        type: item.category === "Drinks" ? "Drink" : "Food",
+      })),
+      isCompleted: false,
+      status: "Pending",
+      timestamp: new Date().toISOString(),
+    }
+  
+    console.log("Sending order to backend:", formattedOrder)
+  
+    try {
+      const response = await fetch("https://api-access20250612100213-dahnfbc4a4cnfwgd.westeurope-01.azurewebsites.net/api/orders/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formattedOrder),
       })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+  
+      console.log("Raw response object:", response)
+  
+      const contentType = response.headers.get("content-type")
+      let result = null
+  
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json()
+        console.log("Parsed JSON response:", result)
+      } else {
+        const text = await response.text()
+        console.log("Response text (non-JSON):", text)
       }
-
-      const result = await response.json()
-      console.log("Order submitted successfully:", result)
-
-      alert(`Order #${result.id || "New"} placed successfully!`)
-
-      clearCart()
-      navigate("/")
+  
+      if (!response.ok) {
+        console.error("Server returned an error status:", response.status)
+        alert(`Error: ${response.status}. Please try again.`)
+        return
+      }
+  
+      const successMessage = hasTableId 
+        ? `Order #${result?.id || "New"} placed successfully for Table ${tableId}!`
+        : `Order #${result?.id || "New"} placed successfully!`
+      
+      alert(successMessage)
+      clearCart() 
+      navigate("/") 
     } catch (error) {
-      console.error("Error submitting order:", error)
-      alert("There was an error processing your order. Please try again.")
+      console.error("Error caught in catch block:", error)
+      alert("Something went wrong while submitting the order.")
     } finally {
       setIsCheckingOut(false)
     }
@@ -81,28 +100,6 @@ const CartPage = () => {
     navigate("/")
   }
 
-  // const order = {
-  //   orderId: `ORD-${Date.now()}`,
-  //   timestamp: new Date().toISOString(),
-  //   tableNumber: "15",
-  //   items: cartItems.map((item) => ({
-  //     id: item.id,
-  //     name: item.name,
-  //     quantity: item.quantity,
-  //     unitPrice: item.price,
-  //     modifications: item.modifications,
-  //     instructions: item.instructions || "",
-  //     itemTotal: item.totalPrice,
-  //   })),
-  //   summary: {
-  //     subtotal: Number.parseFloat(subtotal),
-  //     additions: Number.parseFloat(additions),
-  //     total: Number.parseFloat(total),
-  //   },
-
-  // }
-
-
   return (
     <div className="min-h-screen w-full flex flex-col">
       <div className="flex-1 flex flex-col w-full mx-auto">
@@ -110,13 +107,24 @@ const CartPage = () => {
           <button onClick={goBack} className="text-white mr-4">
             <ArrowLeft className="h-6 w-6" />
           </button>
-          <h1 className="text-xl font-medium flex-1 text-center">Willem</h1>
+          <div className="flex-1 text-center">
+            <h1 className="text-xl font-medium">Willem</h1>
+            {hasTableId && (
+              <p className="text-sm opacity-90">Table {tableId}</p>
+            )}
+          </div>
           <div className="w-6"></div> 
         </header>
 
-     
         <main className="flex-1 flex flex-col p-4">
-          <h2 className="text-xl font-bold mb-4">Order</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Order</h2>
+            {!hasTableId && (
+              <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs">
+                No Table
+              </div>
+            )}
+          </div>
 
           {cartItems.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
@@ -157,15 +165,20 @@ const CartPage = () => {
                           <button
                             onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
                             className="bg-primary text-white rounded-l-full w-6 h-6 flex items-center justify-center"
+                            data-testid="decrease-quantity"
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <div className="bg-primary bg-opacity-10 h-6 w-8 flex items-center justify-center text-primary text-sm font-medium">
+                          <div 
+                            className="bg-primary bg-opacity-10 h-6 w-8 flex items-center justify-center text-primary text-sm font-medium"
+                            data-testid="quantity-display"
+                          >
                             {item.quantity}
                           </div>
                           <button
                             onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
                             className="bg-primary text-white rounded-r-full w-6 h-6 flex items-center justify-center"
+                            data-testid="increase-quantity"
                           >
                             <Plus className="h-3 w-3" />
                           </button>
@@ -189,6 +202,12 @@ const CartPage = () => {
                   <span>Total</span>
                   <span>${total}</span>
                 </div>
+                {hasTableId && (
+                  <div className="flex justify-between text-sm text-gray-600 pt-1">
+                    <span>Table</span>
+                    <span>{tableId}</span>
+                  </div>
+                )}
               </div>
 
               <button
@@ -196,7 +215,7 @@ const CartPage = () => {
                 disabled={isCheckingOut}
                 className="w-full bg-primary text-white py-3 rounded-lg mt-4 font-medium disabled:opacity-70"
               >
-                {isCheckingOut ? "Processing..." : "Checkout"}
+                {isCheckingOut ? "Processing..." : hasTableId ? `Checkout for Table ${tableId}` : "Checkout"}
               </button>
             </>
           )}
@@ -207,4 +226,3 @@ const CartPage = () => {
 }
 
 export default CartPage
-
