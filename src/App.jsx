@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import { CartProvider } from "./context/CartContext"
+import { TableProvider } from "./context/TableContext"
 import Homepage from "./pages/Homepage"
 import CartPage from "./pages/CartPage"
 import KitchenPortal from "./pages/KitchenPortal"
@@ -7,18 +8,19 @@ import KitchenPortal from "./pages/KitchenPortal"
 function App() {
   return (
     <Router>
-    <CartProvider>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/kitchen" element={<KitchenPortal />} />
-        {/* <Route path="/bar" element={<BarPortal />} /> */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </CartProvider>
-  </Router>
+      <TableProvider>
+        <CartProvider>
+          <Routes>
+            <Route path="/table/:tableId" element={<Homepage />} />
+            <Route path="/" element={<Homepage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/kitchen" element={<KitchenPortal />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </CartProvider>
+      </TableProvider>
+    </Router>
   )
 }
 
 export default App
-

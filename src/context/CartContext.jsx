@@ -1,6 +1,4 @@
 /* eslint-disable react/prop-types */
-
-
 import { createContext, useContext, useState, useEffect } from "react"
 
 const CartContext = createContext()
@@ -15,13 +13,8 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cart")
-    return savedCart ? JSON.parse(savedCart) : []
+    return []
   })
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems))
-  }, [cartItems])
 
   const addToCart = (item) => {
     const existingItemIndex = cartItems.findIndex((cartItem) => {
@@ -100,4 +93,3 @@ export const CartProvider = ({ children }) => {
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
-
