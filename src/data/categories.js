@@ -24,26 +24,6 @@ const categories = [
       name: "Dessert",
       image: "/images/dalgona-dame-blanche.jpg",
     },
-    {
-      id: 6,
-      name: "test6",
-      image: "/images/dalgona-dame-blanche.jpg",
-    },
-    {
-      id: 7,
-      name: "test7",
-      image: "/images/dalgona-dame-blanche.jpg",
-    },
-    {
-      id: 8,
-      name: "test8",
-      image: "/images/dalgona-dame-blanche.jpg",
-    },
-    {
-      id: 9,
-      name: "test9",
-      image: "/images/dalgona-dame-blanche.jpg",
-    },
   ]
   
   export default categories
