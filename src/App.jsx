@@ -12,6 +12,7 @@ function App() {
   return (
     <Router>
       <TableProvider>
+        <SignalRProvider>
         <CartProvider>
           <Routes>
             <Route path="/table/:tableId" element={<Homepage />} />
@@ -21,6 +22,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </CartProvider>
+        </SignalRProvider>
       </TableProvider>
     </Router>
   )

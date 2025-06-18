@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // This ensures assets are loaded using relative paths
+  base: '/', // This ensures assets work with React Router on subpaths
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
