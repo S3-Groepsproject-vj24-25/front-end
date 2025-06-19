@@ -7,7 +7,7 @@ const OrderStatus = {
   COMPLETED: "Completed",
 }
 
-const API_BASE_URL = "https://api-access20250612100213-dahnfbc4a4cnfwgd.westeurope-01.azurewebsites.net/api/orders"
+const API_BASE_URL = "https://willemapi-access20250619102749-b6cqcvf5fyhge2du.canadacentral-01.azurewebsites.net/api/orders"
 
 const fetchOrders = async () => {
   try {

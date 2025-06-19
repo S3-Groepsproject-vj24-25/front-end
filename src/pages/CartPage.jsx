@@ -54,7 +54,7 @@ const CartPage = () => {
     console.log("Sending order to backend:", formattedOrder)
   
     try {
-      const response = await fetch("https://api-access20250612100213-dahnfbc4a4cnfwgd.westeurope-01.azurewebsites.net/api/orders/add", {
+      const response = await fetch("https://willemapi-access20250619102749-b6cqcvf5fyhge2du.canadacentral-01.azurewebsites.net/api/orders/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

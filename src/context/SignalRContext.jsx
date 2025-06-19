@@ -21,7 +21,7 @@ export const SignalRProvider = ({ children }) => {
 
   useEffect(() => {
     const newConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5238/helpHub") 
+      .withUrl("https://willemapi-access20250619102749-b6cqcvf5fyhge2du.canadacentral-01.azurewebsites.net/helphub") 
       .withAutomaticReconnect()
       .build()
 

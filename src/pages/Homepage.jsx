@@ -88,7 +88,7 @@ export default function Homepage() {
         </main>
 
         <footer className="w-full p-4 bg-white space-y-3">
-          <HelpButton tableNumber="15"/>
+          <HelpButton tableNumber={currentTableId}/>
           <CartSummary />
         </footer>
       </div>
