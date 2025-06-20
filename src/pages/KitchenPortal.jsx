@@ -15,7 +15,9 @@ const fetchOrders = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
-    return await response.json()
+    var orders = await response.json()
+    console.log(orders)
+    return orders
   } catch (error) {
     console.error("Error fetching kitchen orders:", error)
     throw error
@@ -392,7 +394,7 @@ const KitchenPortal = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-medium">Order #{order.id}</div>
-                    <div className="text-sm text-gray-500">Table: {order.tableNumber}</div>
+                    <div className="text-sm text-gray-500">Table: {order.tableID}</div>
                     <div className="text-sm text-gray-500">{formatTime(order.timestamp)}</div>
                   </div>
                   <div
@@ -405,7 +407,7 @@ const KitchenPortal = () => {
                   </div>
                 </div>
                 <div className="mt-2 text-sm">
-                  {order.items.filter((item) => item.type === "Food").length} food item(s)
+                  {order.items.length} food item(s)
                 </div>
               </div>
             ))
@@ -449,7 +451,7 @@ const KitchenPortal = () => {
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <h3 className="text-sm font-medium text-gray-500 mb-1">Table</h3>
-                <p>{selectedOrder.tableNumber}</p>
+                <p>{selectedOrder.tableID}</p>
               </div>
             </div>
 
@@ -459,7 +461,7 @@ const KitchenPortal = () => {
               </div>
               <div className="divide-y">
                 {selectedOrder.items
-                  .filter((item) => item.type === "Food")
+                  // .filter((item) => item.type === "Food")
                   .map((item, index) => (
                     <div key={index} className="px-6 py-4">
                       <div className="flex justify-between">
