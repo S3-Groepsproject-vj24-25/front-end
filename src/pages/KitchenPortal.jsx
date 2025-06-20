@@ -11,7 +11,7 @@ const API_BASE_URL = "https://willemapi-access20250619102749-b6cqcvf5fyhge2du.ca
 
 const fetchOrders = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/kitchen`)
+    const response = await fetch(`${API_BASE_URL}/orders`)
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }

@@ -19,6 +19,8 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/kitchen" element={<KitchenPortal />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/waiter" element={<WaiterPortal />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </CartProvider>
